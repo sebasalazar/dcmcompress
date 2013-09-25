@@ -58,9 +58,7 @@ public class Compress{
         // Console.WriteLine(system);
 	Process zip2 = System.Diagnostics.Process.Start("/usr/bin/zip", system);
         zip2.WaitForExit();
-        string archivo = String.Format(path_patient, pat_name, "zip");
-        Console.WriteLine(archivo);
-        if(File.Exists(archivo))
+        if(File.Exists(String.Format(path_patient, pat_name, "zip")))
             return true;
         else
             return false;
@@ -87,8 +85,9 @@ public class Compress{
     }
     
     private static bool Create(int pk, string pat_name, string fullPath){
-        
-        if(!File.Exists(String.Format(path_patient, pat_name,"zip"))){
+        string archivo = String.Format(path_patient, pat_name,"zip");
+        Console.WriteLine(archivo);
+        if(!File.Exists(archivo)){
             if(!Zip2(pk, pat_name, fullPath))
                 if(!Zip(pk, pat_name, fullPath))
                     if(!Zip7(pk, pat_name, fullPath))
