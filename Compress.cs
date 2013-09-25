@@ -25,7 +25,10 @@ public class Compress{
         
         while(reader.Read()) {
             pat_name = reader.GetString(reader.GetOrdinal("pat_name")).Replace("^","").Trim().ToLower().Replace(" ","-").Replace(".","-")+pk;
-            fullPath += String.Format("/opt/dcm4chee/server/default/archive/{0} ", reader.GetString(reader.GetOrdinal("filepath")));
+            String archivo = String.Format("/opt/dcm4chee/server/default/archive/{0} ", reader.GetString(reader.GetOrdinal("filepath")));
+            if (File.Exists(archivo)) {
+	      fullPath += archivo;
+            }
         }
         if (fullPath == null)
             return;
