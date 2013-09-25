@@ -56,9 +56,11 @@ public class Compress{
         // string system = String.Format("/usr/bin/zip -5 /srv/web/medipacs.cl/www/htdocs/zip/{0}.zip  {1}", pat_name, fullPath);
         string system = String.Format("-5 /srv/web/medipacs.cl/www/htdocs/zip/{0}.zip {1}", pat_name, fullPath);
         // Console.WriteLine(system);
-	Process tarbz2 = System.Diagnostics.Process.Start("/usr/bin/zip", system);
-        tarbz2.WaitForExit();
-        if(File.Exists(String.Format(path_patient, pat_name, "zip")))
+	Process zip2 = System.Diagnostics.Process.Start("/usr/bin/zip", system);
+        zip2.WaitForExit();
+        string archivo = String.Format(path_patient, pat_name, "zip");
+        Console.WriteLine(archivo);
+        if(File.Exists(archivo))
             return true;
         else
             return false;
