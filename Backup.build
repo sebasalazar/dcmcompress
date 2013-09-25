@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+  <project name="Hello World" default="build" basedir=".">
+    <target name="build">
+      <csc target="library" output="Tools.dll">
+        <sources>
+          <include name="Files.cs"/>
+	  <include name="Db.cs" />
+        </sources>
+	<references>
+	 <include name="System.Data.dll"/>
+         <include name="Npgsql.dll" />
+	</references>
+      </csc>
+
+      <csc target="exe" output="backup.exe">
+       <sources>
+        <include name="Backup.cs"/>
+       </sources>
+       <references>
+        <include name="Tools.dll"/>
+         <include name="System.Data.dll"/>
+         <include name="Npgsql.dll" />
+       </references>			
+      </csc>
+
+    </target>
+ </project>
+
