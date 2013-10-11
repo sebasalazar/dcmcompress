@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.ComponentModel;
 using System.Data.SqlClient;
 using System.IO;
+using System.Text;
 using Npgsql;
 using InterfaceDb;
 
@@ -24,11 +25,9 @@ public class Compress{
         db.Close();
         
         while(reader.Read()) {
-            pat_name = reader.GetString(reader.GetOrdinal("pat_name")).Replace("^","").Trim().ToLower().Replace(" ","-").Replace(".","-")+pk;
-            String archivo = String.Format("/opt/dcm4chee/server/default/archive/{0} ", reader.GetString(reader.GetOrdinal("filepath")));
-            if (File.Exists(archivo)) {
-	      fullPath += archivo;
-            }
+            //pat_name = reader.GetString(reader.GetOrdinal("pat_name")).Replace("^","").Trim().ToLower().Replace(" ","-").Replace(".","-")+pk;
+            pat_name = "estudio_" + pk;
+            fullPath += String.Format("/opt/dcm4chee/server/default/archive/{0} ", reader.GetString(reader.GetOrdinal("filepath")));
         }
         if (fullPath == null)
             return;
@@ -40,6 +39,7 @@ public class Compress{
         return;
         
     }
+    
     
     private static bool Zip(int pk, string pat_name, string fullPath){
         string system = String.Format("7za a -tzip  /srv/web/medipacs.cl/www/htdocs/zip/{0}.zip  {1}", pat_name, fullPath);
@@ -56,8 +56,8 @@ public class Compress{
         // string system = String.Format("/usr/bin/zip -5 /srv/web/medipacs.cl/www/htdocs/zip/{0}.zip  {1}", pat_name, fullPath);
         string system = String.Format("-5 /srv/web/medipacs.cl/www/htdocs/zip/{0}.zip {1}", pat_name, fullPath);
         // Console.WriteLine(system);
-	Process zip2 = System.Diagnostics.Process.Start("/usr/bin/zip", system);
-        zip2.WaitForExit();
+	Process tarbz2 = System.Diagnostics.Process.Start("/usr/bin/zip", system);
+        tarbz2.WaitForExit();
         if(File.Exists(String.Format(path_patient, pat_name, "zip")))
             return true;
         else
@@ -85,9 +85,8 @@ public class Compress{
     }
     
     private static bool Create(int pk, string pat_name, string fullPath){
-        string archivo = String.Format(path_patient, pat_name,"zip");
-        Console.WriteLine(archivo);
-        if(!File.Exists(archivo)){
+        
+        if(!File.Exists(String.Format(path_patient, pat_name,"zip"))){
             if(!Zip2(pk, pat_name, fullPath))
                 if(!Zip(pk, pat_name, fullPath))
                     if(!Zip7(pk, pat_name, fullPath))
