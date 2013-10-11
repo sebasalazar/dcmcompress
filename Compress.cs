@@ -12,7 +12,14 @@ public class Compress{
    
     public static void Main(string[] args){
     
-        int pk = Validate(args);        
+        // int pk = Validate(args);        
+        
+        if(args.Length <= 1) {
+			return;
+        }
+        
+        string nombre = args[1];
+        int pk = ValidateInt(args[0]);
         if (pk < 0)
             return;
         Db db = new Db();
@@ -26,7 +33,7 @@ public class Compress{
         
         while(reader.Read()) {
             //pat_name = reader.GetString(reader.GetOrdinal("pat_name")).Replace("^","").Trim().ToLower().Replace(" ","-").Replace(".","-")+pk;
-            pat_name = "estudio_" + pk;
+            pat_name = nombre + pk;
             fullPath += String.Format("/opt/dcm4chee/server/default/archive/{0} ", reader.GetString(reader.GetOrdinal("filepath")));
         }
         if (fullPath == null)
@@ -99,21 +106,31 @@ public class Compress{
     }
     
     private static int Validate(string[] args){
-        
-        if(args.Length >= 1){
+        if(args.Length >= 1) {
             try{
                 return Convert.ToInt32(args[0]);
-            }
-            catch{
+            } catch {
                 Console.WriteLine("not number");
                 Environment.Exit( 0 );
                 return -1;
             }
-        }
-        else{
+        } else {
             return -1;
         }
     }
+
+    private static int ValidateInt(string arg){
+		int valor = -1;
+            try{
+                valor = Convert.ToInt32(arg);
+            } catch {
+                Console.WriteLine("not number");
+                Environment.Exit( 0 );
+                valor = -1;
+            }
+		return valor;
+    }
+    
     
     static readonly string queryPath = "SELECT patient.pat_name, files.filepath "+
 	"FROM patient INNER JOIN study ON (patient.pk = study.patient_fk) INNER JOIN series ON (study.pk = series.study_fk) "+
